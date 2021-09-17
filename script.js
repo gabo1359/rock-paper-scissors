@@ -49,6 +49,16 @@ function playRound(playerSelection, computerSelection) {
     }
 }
 
-const playerSelection = "rock"
-const computerSelection = computerPlay()
-console.log(playRound(playerSelection, computerSelection))
+function game() {
+    for (let i=1; i<=5; i++){
+        const playerSelection = window.prompt("Enter your choice: ")
+        if (["rock","paper","scissors"].includes(playerSelection.toLowerCase())) {
+            const computerSelection = computerPlay()
+            console.log(playRound(playerSelection, computerSelection))
+        }
+        else {
+            console.log("You entered a wrong option!")
+        }
+        
+    }    
+}
