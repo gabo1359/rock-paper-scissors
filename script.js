@@ -1,5 +1,15 @@
+let playerScore = 0
+let computerScore = 0
+const playerScore_span = document.getElementById("userScore")
+const computerScore_span = document.getElementById("computerScore")
+const result_div = document.querySelector(".result")
+const rock_div = document.getElementById("1")
+const paper_div = document.getElementById("2")
+const scissors_div = document.getElementById("3")
+
+
 function computerPlay() {
-    computer = Math.floor(Math.random()*4) + 1;
+    computer = Math.floor(Math.random()*3) + 1;
     if (computer === 1) {
         computer = "Rock";
     }
@@ -12,53 +22,100 @@ function computerPlay() {
     return computer
 }
 
-function playRound(playerSelection, computerSelection) {
-    playerSelection = playerSelection[0].toUpperCase() + playerSelection.toLowerCase().slice(1)
+function change(player) {
+    if (player == "Rock") return "1";
+    if (player == "Paper") return "2";
+    if (player == "Scissors") return "3";
+}
+
+function exit() {
+    if (playerScore == 5) {
+        document.querySelector(".final").classList.add("win")
+        document.querySelector(".final").innerHTML = "CONGRATULATIONS YOU WIN!"
+        setTimeout(function() {window.location.reload();}, 2000 )
+    }
+    if (computerScore == 5) {
+        document.querySelector(".final").classList.add("lose")
+        document.querySelector(".final").innerHTML = "I'M SORRY, COMPUTER WINS!"
+        setTimeout(function() {window.location.reload();}, 2000 )
+    }
+}
+
+function draw(player,computer) {
+    result_div.innerHTML = "It was a draw!"
+    document.getElementById(change(player)).classList.add("yellow-border")
+    setTimeout(function() {document.getElementById(change(player)).classList.remove("yellow-border")}, 400 )
+    exit()
+}
+
+function win(player,computer) {
+    playerScore ++
+    playerScore_span.innerHTML = playerScore
+    result_div.innerHTML = player + " beats " + computer + ". You won 1 point!"
+    document.getElementById(change(player)).classList.add("green-border")
+    setTimeout(function() {document.getElementById(change(player)).classList.remove("green-border")}, 400 )
+    exit()
+}
+
+function lose(player,computer) {
+    computerScore++
+    computerScore_span.innerHTML = computerScore
+    result_div.innerHTML = player + " loses to " + computer + ". Computer won 1 point"
+    document.getElementById(change(player)).classList.add("red-border")
+    setTimeout(function() {document.getElementById(change(player)).classList.remove("red-border")}, 400 )
+    exit()
+}
+
+
+function playRound(playerSelection) {
+    const computerSelection = computerPlay()
     if (playerSelection === "Rock") {
         if (computerSelection === "Rock"){
-            return "It's a tie!"
+            draw(playerSelection,computerSelection)
         }
         else if (computerSelection === "Paper"){
-            return "You lose! Paper beats Rock"
+            lose(playerSelection,computerSelection)
         } 
         else {
-            return "You won! Rock beats Scissors"
+            win(playerSelection,computerSelection)
         }
     }
     if (playerSelection === "Paper") {
         if (computerSelection === "Rock"){
-            return "You won! Paper beats Rock"
+            win(playerSelection,computerSelection)
         }
         else if (computerSelection === "Paper"){
-            return "It's a tie!"
+            draw(playerSelection,computerSelection)
         } 
         else {
-            return "You lose! Scissors beats paper"
+            lose(playerSelection,computerSelection)
         }
     }
     if (playerSelection === "Scissors") {
         if (computerSelection === "Rock"){
-            return "You lose! Rock beats Scissors"
+            lose(playerSelection,computerSelection)
         }
         else if (computerSelection === "Paper"){
-            return "You won! Scissors beats paper"
+            win(playerSelection,computerSelection)
         } 
         else {
-            return "It's a tie"
+            draw(playerSelection,computerSelection)
         }
     }
 }
 
-function game() {
-    for (let i=1; i<=5; i++){
-        const playerSelection = window.prompt("Enter your choice: ")
-        if (["rock","paper","scissors"].includes(playerSelection.toLowerCase())) {
-            const computerSelection = computerPlay()
-            console.log(playRound(playerSelection, computerSelection))
-        }
-        else {
-            console.log("You entered a wrong option!")
-        }
-        
-    }    
+function main() {
+    rock_div.addEventListener('click', function() {
+        playRound("Rock")
+    })
+    
+    paper_div.addEventListener('click', function() {
+        playRound("Paper")
+    })
+    
+    scissors_div.addEventListener('click', function() {
+        playRound("Scissors")
+    })
 }
+
+main()
